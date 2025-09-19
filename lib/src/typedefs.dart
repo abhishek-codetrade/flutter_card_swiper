@@ -35,3 +35,9 @@ typedef CardSwiperOnUndo = bool Function(
   int currentIndex,
   CardSwiperDirection direction,
 );
+
+typedef CardSwiperDragStart = void Function(DragStartDetails details);
+
+typedef CardSwiperDragUpdate = void Function(DragUpdateDetails details);
+
+typedef CardSwiperDragEnd = void Function(DragEndDetails details);

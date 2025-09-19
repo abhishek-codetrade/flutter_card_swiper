@@ -112,6 +112,26 @@ class CardSwiper extends StatefulWidget {
   /// The function is called with the last detected horizontal direction and the last detected vertical direction
   final CardSwiperDirectionChange? onSwipeDirectionChange;
 
+  /// Called when the user starts dragging a card.
+  ///
+  /// Use this callback to perform any setup or animation when a swipe begins.
+  final CardSwiperDragStart? onDragStart;
+
+  /// Called repeatedly as the user drags a card.
+  ///
+  /// Receives the current [DragUpdateDetails], allowing you to track
+  /// the swipe progress, animate overlays, or apply custom effects
+  /// while the card is being swiped.
+  final CardSwiperDragUpdate? onDragUpdate;
+
+  /// Called when the user releases the card after dragging.
+  ///
+  /// Provides the final [DragEndDetails], which can be used to
+  /// determine the swipe velocity, trigger end-of-swipe animations,
+  /// or handle card removal logic.
+  final CardSwiperDragEnd? onDragEnd;
+
+
   /// The offset of the back card from the front card.
   ///
   /// In order to keep the back card position same after changing the [backCardOffset],
@@ -137,6 +157,9 @@ class CardSwiper extends StatefulWidget {
     this.onSwipe,
     this.onEnd,
     this.onSwipeDirectionChange,
+    this.onDragStart,
+    this.onDragUpdate,
+    this.onDragEnd,
     this.allowedSwipeDirection = const AllowedSwipeDirection.all(),
     this.isLoop = true,
     this.numberOfCardsDisplayed = 2,

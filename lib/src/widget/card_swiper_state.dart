@@ -1,7 +1,6 @@
 part of 'card_swiper.dart';
 
-class _CardSwiperState<T extends Widget> extends State<CardSwiper>
-    with SingleTickerProviderStateMixin {
+class _CardSwiperState<T extends Widget> extends State<CardSwiper> with SingleTickerProviderStateMixin {
   late CardAnimation _cardAnimation;
   late AnimationController _animationController;
 
@@ -28,8 +27,7 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
 
     _undoableIndex.state = widget.initialIndex;
 
-    controllerSubscription =
-        widget.controller?.events.listen(_controllerListener);
+    controllerSubscription = widget.controller?.events.listen(_controllerListener);
 
     _animationController = AnimationController(
       duration: widget.duration,
@@ -49,12 +47,10 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
   }
 
   @override
-  void didUpdateWidget(oldWidget)
-  {
+  void didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
     controllerSubscription?.cancel();
-    controllerSubscription =
-        widget.controller?.events.listen(_controllerListener);
+    controllerSubscription = widget.controller?.events.listen(_controllerListener);
   }
 
   void onSwipeDirectionChanged(CardSwiperDirection direction) {
@@ -70,8 +66,7 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
         _detectedVerticalDirection = direction;
     }
 
-    widget.onSwipeDirectionChange
-        ?.call(_detectedHorizontalDirection, _detectedVerticalDirection);
+    widget.onSwipeDirectionChange?.call(_detectedHorizontalDirection, _detectedVerticalDirection);
   }
 
   @override
@@ -128,6 +123,7 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
         },
         onPanStart: (tapInfo) {
           if (!widget.isDisabled) {
+            widget.onDragStart?.call(tapInfo);
             final renderBox = context.findRenderObject()! as RenderBox;
             final position = renderBox.globalToLocal(tapInfo.globalPosition);
 
@@ -136,6 +132,7 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
         },
         onPanUpdate: (tapInfo) {
           if (!widget.isDisabled) {
+            widget.onDragUpdate?.call(tapInfo);
             setState(
               () => _cardAnimation.update(
                 tapInfo.delta.dx,
@@ -147,6 +144,7 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
         },
         onPanEnd: (tapInfo) {
           if (_canSwipe) {
+            widget.onDragEnd?.call(tapInfo);
             _tappedOnTop = false;
             _onEndAnimation();
           }
@@ -198,9 +196,7 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
 
   Future<void> _handleCompleteSwipe() async {
     final isLastCard = _currentIndex! == widget.cardsCount - 1;
-    final shouldCancelSwipe = await widget.onSwipe
-            ?.call(_currentIndex!, _nextIndex, _detectedDirection) ==
-        false;
+    final shouldCancelSwipe = await widget.onSwipe?.call(_currentIndex!, _nextIndex, _detectedDirection) == false;
 
     if (shouldCancelSwipe) {
       return;
@@ -237,14 +233,10 @@ class _CardSwiperState<T extends Widget> extends State<CardSwiper>
 
   CardSwiperDirection _getEndAnimationDirection() {
     if (_cardAnimation.left.abs() > widget.threshold) {
-      return _cardAnimation.left.isNegative
-          ? CardSwiperDirection.left
-          : CardSwiperDirection.right;
+      return _cardAnimation.left.isNegative ? CardSwiperDirection.left : CardSwiperDirection.right;
     }
     if (_cardAnimation.top.abs() > widget.threshold) {
-      return _cardAnimation.top.isNegative
-          ? CardSwiperDirection.top
-          : CardSwiperDirection.bottom;
+      return _cardAnimation.top.isNegative ? CardSwiperDirection.top : CardSwiperDirection.bottom;
     }
     return CardSwiperDirection.none;
   }
